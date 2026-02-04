@@ -1,4 +1,14 @@
+import { useState } from "react";
 import { Trophy, Trash2, Download, FileJson } from "lucide-react";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { exportHistoryAsJSON, exportHistoryAsCSV } from "@/lib/historyStorage";
 
 interface HistoryPanelProps {
@@ -7,6 +17,13 @@ interface HistoryPanelProps {
 }
 
 const HistoryPanel = ({ history, onClear }: HistoryPanelProps) => {
+  const [showClearDialog, setShowClearDialog] = useState(false);
+
+  const handleConfirmClear = () => {
+    onClear();
+    setShowClearDialog(false);
+  };
+
   if (history.length === 0) return null;
 
   return (
@@ -34,7 +51,7 @@ const HistoryPanel = ({ history, onClear }: HistoryPanelProps) => {
             <span className="text-xs hidden sm:inline">CSV</span>
           </button>
           <button
-            onClick={onClear}
+            onClick={() => setShowClearDialog(true)}
             className="text-muted-foreground hover:text-destructive transition-colors text-sm flex items-center gap-1 px-2 py-1 rounded hover:bg-secondary/50"
             title="Clear all"
           >
@@ -59,6 +76,29 @@ const HistoryPanel = ({ history, onClear }: HistoryPanelProps) => {
           </div>
         ))}
       </div>
+
+      {/* Clear History Dialog */}
+      <AlertDialog open={showClearDialog} onOpenChange={setShowClearDialog}>
+        <AlertDialogTrigger asChild>
+          <button className="hidden" />
+        </AlertDialogTrigger>
+        <AlertDialogContent>
+          <AlertDialogTitle>Clear History</AlertDialogTitle>
+          <AlertDialogDescription>
+            Are you sure you want to clear all spin history? This action cannot
+            be undone.
+          </AlertDialogDescription>
+          <div className="flex justify-end gap-3">
+            <AlertDialogCancel>Cancel</AlertDialogCancel>
+            <AlertDialogAction
+              onClick={handleConfirmClear}
+              className="bg-destructive hover:bg-destructive/90"
+            >
+              Clear
+            </AlertDialogAction>
+          </div>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 };

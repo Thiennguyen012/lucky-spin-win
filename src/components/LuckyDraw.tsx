@@ -1,6 +1,6 @@
 import { useState, useCallback, useEffect } from "react";
 import confetti from "canvas-confetti";
-import { Gift, PartyPopper, Star } from "lucide-react";
+import { Gift, PartyPopper, Star, ChevronUp, ChevronDown } from "lucide-react";
 import NumberSlot from "./NumberSlot";
 import SpinButton from "./SpinButton";
 import RangeSelector from "./RangeSelector";
@@ -21,6 +21,7 @@ const LuckyDraw = () => {
   const [isSpinning, setIsSpinning] = useState(false);
   const [history, setHistory] = useState<number[]>([]);
   const [availableNumbers, setAvailableNumbers] = useState<number[]>([]);
+  const [showHistory, setShowHistory] = useState(false);
 
   // Load history from localStorage on mount
   useEffect(() => {
@@ -140,8 +141,21 @@ const LuckyDraw = () => {
     <div className="min-h-screen bg-background flex flex-col items-center justify-start pt-8 sm:pt-12 px-4 pb-8 relative overflow-hidden">
       <ParticleBackground />
 
+      {/* Toggle History Button */}
+      <button
+        onClick={() => setShowHistory(!showHistory)}
+        className="fixed bottom-4 right-4 z-20 p-2 rounded-lg bg-lucky-gold/10 hover:bg-lucky-gold/20 text-lucky-gold transition-colors"
+        title={showHistory ? "Hide history" : "Show history"}
+      >
+        {showHistory ? (
+          <ChevronDown className="w-6 h-6" />
+        ) : (
+          <ChevronUp className="w-6 h-6" />
+        )}
+      </button>
+
       {/* Header */}
-      <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-4 z-10">
+      {/* <div className="flex items-center gap-2 sm:gap-3 mb-2 sm:mb-4 z-10">
         <Star
           className="w-6 h-6 sm:w-8 sm:h-8 text-lucky-gold animate-float"
           style={{ animationDelay: "0s" }}
@@ -151,31 +165,20 @@ const LuckyDraw = () => {
           className="w-6 h-6 sm:w-8 sm:h-8 text-lucky-gold animate-float"
           style={{ animationDelay: "0.5s" }}
         />
-      </div>
+      </div> */}
 
-      <h1 className="font-display text-4xl sm:text-5xl md:text-7xl text-lucky-gold lucky-text-glow mb-2 sm:mb-4 z-10 tracking-wider">
+      <h1 className="font-display text-4xl sm:text-5xl md:text-7xl text-lucky-gold lucky-text-glow mb-2 sm:mb-6 z-10 tracking-wider mt-[160px]">
         LUCKY DRAW
       </h1>
-
+      {/* 
       <div className="flex items-center gap-2 text-muted-foreground mb-6 sm:mb-8 z-10">
         <Gift className="w-4 h-4 sm:w-5 sm:h-5" />
         <span className="text-sm sm:text-base">Sự kiện cuối năm 2026</span>
         <Gift className="w-4 h-4 sm:w-5 sm:h-5" />
-      </div>
-
-      {/* Range Selector */}
-      <div className="mb-6 sm:mb-8 z-10">
-        <RangeSelector
-          minValue={minValue}
-          maxValue={maxValue}
-          onMinChange={setMinValue}
-          onMaxChange={setMaxValue}
-          disabled={isSpinning}
-        />
-      </div>
+      </div> */}
 
       {/* Number Display */}
-      <div className="relative mb-8 sm:mb-10 z-10">
+      <div className="relative mb-5 sm:mb-5 z-10">
         <div className="bg-card rounded-2xl p-6 sm:p-8 border-2 border-lucky-border lucky-glow">
           <div className="flex gap-3 sm:gap-4 md:gap-6">
             <NumberSlot value={digits[0]} isSpinning={isSpinning} delay={0} />
@@ -208,10 +211,23 @@ const LuckyDraw = () => {
         />
       </div>
 
-      {/* History Panel */}
-      <div className="z-10 w-full flex justify-center">
-        <HistoryPanel history={history} onClear={handleClearHistory} />
+      {/* Range Selector */}
+      <div className="mb-6 sm:mb-8 z-10">
+        <RangeSelector
+          minValue={minValue}
+          maxValue={maxValue}
+          onMinChange={setMinValue}
+          onMaxChange={setMaxValue}
+          disabled={isSpinning}
+        />
       </div>
+
+      {/* History Panel */}
+      {showHistory && (
+        <div className="z-10 w-full flex justify-center">
+          <HistoryPanel history={history} onClear={handleClearHistory} />
+        </div>
+      )}
     </div>
   );
 };

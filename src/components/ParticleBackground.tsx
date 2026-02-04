@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState } from "react";
 
 interface Particle {
   id: number;
@@ -28,7 +28,15 @@ const ParticleBackground = () => {
   }, []);
 
   return (
-    <div className="fixed inset-0 pointer-events-none overflow-hidden">
+    <div
+      className="fixed inset-0 pointer-events-none overflow-hidden bg-cover bg-top bg-no-repeat"
+      style={{
+        backgroundImage: "url('/asset/quaysoyepfix.png')",
+        backgroundSize: "cover",
+        backgroundPosition: "top center",
+        backgroundRepeat: "no-repeat",
+      }}
+    >
       {particles.map((particle) => (
         <div
           key={particle.id}
